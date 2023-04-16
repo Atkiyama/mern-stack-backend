@@ -2,12 +2,14 @@ const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+const jwt = require("jsonwebtoken");
+const auth = require("./utils/auth");
 const connectDB = require("./utils/database");
 const { ItemModel, UserModel } = require("./utils/schemaModels");
 
 //ITEM functions
 //Create Item
-app.post("/item/create", async (req, res) => {
+app.post("/item/create", auth, async (req, res) => {
   try {
     await connectDB();
     await ItemModel.create(req.body);
@@ -44,7 +46,7 @@ app.get("/item/:id", async (req, res) => {
   }
 });
 //Update Item
-app.put("/item/update/:id", async (req, res) => {
+app.put("/item/update/:id", auth, async (req, res) => {
   try {
     await connectDB();
     const singleItem = await ItemModel.findById(req.params.id);
@@ -59,7 +61,7 @@ app.put("/item/update/:id", async (req, res) => {
   }
 });
 //Delete Item
-app.delete("/item/delete/:id", async (req, res) => {
+app.delete("/item/delete/:id", auth, async (req, res) => {
   try {
     await connectDB();
     const singleItem = await ItemModel.findById(req.params.id);
@@ -86,13 +88,19 @@ app.post("/user/register", async (req, res) => {
   }
 });
 //Login User
+const secret_key = "mern-market";
 app.post("/user/login", async (req, res) => {
   try {
     await connectDB();
     const savedUserData = await UserModel.findOne({ email: req.body.email });
     if (savedUserData) {
       if (req.body.password === savedUserData.password) {
-        return res.status(200).json({ message: "ログイン成功" });
+        const payload = {
+          email: req.body.email,
+        };
+        const token = jwt.sign(payload, secret_key, { expiresIn: "23h" });
+        console.log(token);
+        return res.status(200).json({ message: "ログイン成功", token: token });
       } else {
         return res
           .status(400)
