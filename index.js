@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+app.use(cors);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const jwt = require("jsonwebtoken");
@@ -118,6 +120,6 @@ app.post("/user/login", async (req, res) => {
 //mongo pass CWZjYR7QbiMyYbsv
 // URL mongodb+srv://thisisatkiyama:<password>@cluster0.jfaxdp8.mongodb.net/?retryWrites=true&w=majority
 
-app.listen(5000, () => {
-  console.log("Listening on localhost port 5000");
+app.listen(port, () => {
+  console.log("Listening on localhost port ${port}");
 });
