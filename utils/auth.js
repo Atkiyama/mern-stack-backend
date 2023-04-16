@@ -10,6 +10,7 @@ const auth = async (req, res, next) => {
   }
   try {
     const decode = jwt.verify(token, secret_key);
+    req.body.email = decode.email;
     return next();
   } catch (err) {
     return res
