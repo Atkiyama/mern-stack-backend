@@ -120,6 +120,8 @@ app.post("/user/login", async (req, res) => {
 //mongo pass CWZjYR7QbiMyYbsv
 // URL mongodb+srv://thisisatkiyama:<password>@cluster0.jfaxdp8.mongodb.net/?retryWrites=true&w=majority
 
+const port = process.env.PORT || 5000;
+
 app.listen(port, () => {
   console.log("Listening on localhost port ${port}");
 });
